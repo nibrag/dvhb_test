@@ -89,10 +89,12 @@ class TgBot:
 
         await self.create_stats(msg['from'])
 
+        # get question handler
         handler = self._router.get_handler(msg.get('text'))
         if not handler:
             await self.send_message(chat_id, 'I have no answer. Sorry :(')
         else:
+            # create answer
             if isinstance(handler, str):
                 answer = handler
             elif asyncio.iscoroutinefunction(handler):
@@ -103,6 +105,7 @@ class TgBot:
                 logger.info('Unsupported handler type')
                 return web.HTTPOk()
 
+            # send answer
             await self.send_message(chat_id, answer)
 
         return web.HTTPOk()
